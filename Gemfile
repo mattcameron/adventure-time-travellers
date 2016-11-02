@@ -11,7 +11,7 @@ gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 gem 'figaro', '~> 1.1', '>= 1.1.1'
 gem 'annotate', '~> 2.7', '>= 2.7.1'
-gem 'rubocop', '~> 0.42.0'
+gem 'rubocop', '~> 0.45.0', require: false
 gem 'devise', '~> 4.2'
 
 # Use Redis adapter to run Action Cable in production
