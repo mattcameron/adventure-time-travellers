@@ -11,4 +11,6 @@
 #
 
 class Challenge < ApplicationRecord
+  has_many :users, through: :backers
+  has_many :backers
 end
