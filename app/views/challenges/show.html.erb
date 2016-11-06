@@ -1,5 +1,5 @@
-<p id="notice"><%= notice %></p>
-
+<%= javascript_include_tag 'https://js.stripe.com/v2/' %>
+<%= javascript_tag "Stripe.setPublishableKey('#{Rails.configuration.stripe[:publishable_key]}');" %>
 <p>
   <strong>Description:</strong>
   <%= @challenge.description %>
@@ -10,7 +10,7 @@
   <%= @challenge.amount %>
 </p>
 
-<%= form_for @backer, url: join_challenge_path(@challenge) do |f| %>
+<%= form_for @backer, url: join_challenge_path(@challenge), html: {id: 'capture-payment' } do |f| %>
 
   <% if @backer.errors.any? %>
     <div id="error_explanation">
@@ -25,7 +25,12 @@
   <% end %>
 
   <% if @backer.persisted? %>
+    <%= f.label :name %>
+    <p><%= @backer.name %></p>
     <%= f.hidden_field :name, val: @backer.name %>
+
+    <%= f.label :email %>
+    <p><%= @backer.email %></p>
     <%= f.hidden_field :email, val: @backer.email %>
   <% else %>
     <%= f.label :name %>
@@ -34,6 +39,18 @@
     <%= f.label :email %>
     <%= f.email_field :email, class: 'form-control' %>
   <% end %>
+
+  <%= f.label :card_number %>
+  <%= text_field_tag :card_number %>
+
+  <%= f.label :exp_month %>
+  <%= number_field_tag :exp_month, nil, min: 0, max: 12 %>
+
+  <%= f.label :exp_year %>
+  <%= number_field_tag :exp_year, nil, min: 2016, max: 2050 %>
+
+  <%= f.label :card_verification, 'CVC' %>
+  <%= number_field_tag :card_verification %>
 
   <div class="actions">
     <%= f.submit 'Submit', class: 'btn btn-primary' %>

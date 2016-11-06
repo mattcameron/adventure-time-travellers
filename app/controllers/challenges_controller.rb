@@ -25,12 +25,38 @@ class ChallengesController < ApplicationController
   def join
     @backer = @challenge.backers.find_or_initialize_by(backer_params)
 
-    if @backer.save
+    payment_captured = capture_payment(
+      @challenge,
+      @backer.email,
+      params[:stripeToken]
+    )
+
+    if @backer.valid? && payment_captured && @backer.save
       session[:backer_id] = @backer.id
       redirect_to @challenge, flash: { success: 'Thanks and stuff' }
     else
       render :show
     end
+  end
+
+  def capture_payment(challenge, email, token)
+    customer = Stripe::Customer.create(
+      email:  email,
+      source: token
+    )
+
+    charge = Stripe::Charge.create(
+      customer:     customer.id,
+      amount:       (challenge.amount * 100).to_i,
+      description:  'Rickshaw Run Sponsorship',
+      currency:     'aud'
+    )
+
+    return charge
+
+  rescue Stripe::CardError => e
+    flash[:error] = e.message
+    render :show
   end
 
   # POST /challenges

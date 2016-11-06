@@ -13,6 +13,7 @@ gem 'figaro', '~> 1.1', '>= 1.1.1'
 gem 'annotate', '~> 2.7', '>= 2.7.1'
 gem 'rubocop', '~> 0.45.0', require: false
 gem 'devise', '~> 4.2'
+gem 'stripe', '~> 1.56'
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
