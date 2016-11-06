@@ -10,10 +10,36 @@
   <%= @challenge.amount %>
 </p>
 
-<p>
-  <strong>Status:</strong>
-  <%= @challenge.status %>
-</p>
+<%= form_for @backer, url: join_challenge_path(@challenge) do |f| %>
+
+  <% if @backer.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@backer.errors.count, "error") %> prohibited this @backer from being saved:</h2>
+
+      <ul>
+      <% @backer.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if @backer.persisted? %>
+    <%= f.hidden_field :name, val: @backer.name %>
+    <%= f.hidden_field :email, val: @backer.email %>
+  <% else %>
+    <%= f.label :name %>
+    <%= f.text_field :name, class: 'form-control' %>
+
+    <%= f.label :email %>
+    <%= f.email_field :email, class: 'form-control' %>
+  <% end %>
+
+  <div class="actions">
+    <%= f.submit 'Submit', class: 'btn btn-primary' %>
+  </div>
+
+<% end %>
 
 <%= link_to 'Edit', edit_challenge_path(@challenge) %> |
 <%= link_to 'Back', challenges_path %>

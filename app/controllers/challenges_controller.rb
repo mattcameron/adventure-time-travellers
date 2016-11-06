@@ -1,5 +1,5 @@
 class ChallengesController < ApplicationController
-  before_action :set_challenge, only: [:show, :edit, :update, :destroy]
+  before_action :set_challenge, only: [:show, :edit, :update, :destroy, :join]
 
   # GET /challenges
   # GET /challenges.json
@@ -10,6 +10,7 @@ class ChallengesController < ApplicationController
   # GET /challenges/1
   # GET /challenges/1.json
   def show
+    @backer = Backer.find_or_initialize_by(id: session[:backer_id])
   end
 
   # GET /challenges/new
@@ -19,6 +20,17 @@ class ChallengesController < ApplicationController
 
   # GET /challenges/1/edit
   def edit
+  end
+
+  def join
+    @backer = @challenge.backers.find_or_initialize_by(backer_params)
+
+    if @backer.save
+      session[:backer_id] = @backer.id
+      redirect_to @challenge, flash: { success: 'Thanks and stuff' }
+    else
+      render :show
+    end
   end
 
   # POST /challenges
@@ -70,5 +82,9 @@ class ChallengesController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def challenge_params
       params.require(:challenge).permit(:description, :amount, :status)
+    end
+
+    def backer_params
+      params.require(:backer).permit(:name, :email, :challenge_id)
     end
 end
