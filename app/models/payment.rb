@@ -5,7 +5,7 @@
 #  id           :integer          not null, primary key
 #  backer_id    :integer
 #  amount       :decimal(10, 2)
-#  status       :integer          default("new")
+#  status       :integer          default("untouched")
 #  challenge_id :integer
 #  fail_reason  :string(255)
 #  created_at   :datetime         not null
