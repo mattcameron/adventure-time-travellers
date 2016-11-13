@@ -1,47 +1,44 @@
 class ChallengesController < ApplicationController
   before_action :set_challenge, only: [:show, :edit, :update, :destroy, :join]
 
-  # GET /challenges
-  # GET /challenges.json
   def index
     @challenges = Challenge.all
   end
 
-  # GET /challenges/1
-  # GET /challenges/1.json
   def show
     @backer = Backer.find_or_initialize_by(id: session[:backer_id])
   end
 
-  # GET /challenges/new
   def new
     @challenge = Challenge.new
   end
 
-  # GET /challenges/1/edit
   def edit
   end
 
   def join
     @backer = @challenge.backers.find_or_initialize_by(backer_params)
 
-    payment_captured = capture_payment(
-      @challenge,
-      @backer.email,
-      params[:stripeToken]
-    )
-
-    if @backer.valid? && payment_captured && @backer.save
-      session[:backer_id] = @backer.id
-      redirect_to @challenge, flash: { success: 'Thanks and stuff' }
+    if @backer.valid?
+      capture_payment(
+        @challenge,
+        @backer,
+        params[:stripeToken],
+      )
     else
       render :show
     end
   end
 
-  def capture_payment(challenge, email, token)
+  def capture_payment(challenge, backer, token)
+    payment = Payment.create(
+      challenge: challenge,
+      amount: challenge.amount,
+      backer: backer
+    )
+
     customer = Stripe::Customer.create(
-      email:  email,
+      email:  backer.email,
       source: token
     )
 
@@ -52,15 +49,32 @@ class ChallengesController < ApplicationController
       currency:     'aud'
     )
 
-    return charge
+    update_payment(charge, payment, backer, challenge)
 
   rescue Stripe::CardError => e
     flash[:error] = e.message
+    payment.update(
+      status: 'failed',
+      fail_reason: e
+    )
+    
     render :show
   end
 
-  # POST /challenges
-  # POST /challenges.json
+  def update_payment(charge, payment, backer, challenge)
+    if charge.status == 'succeeded'
+      payment.update(status: 'paid')
+      backer.save
+      session[:backer_id] = backer.id
+      redirect_to challenge, flash: { success: 'Thanks and stuff' }
+    else
+      payment.update(
+        status: 'failed',
+        fail_reason: charge.failure_message
+      )
+    end
+  end
+
   def create
     @challenge = Challenge.new(challenge_params)
 
@@ -75,8 +89,6 @@ class ChallengesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /challenges/1
-  # PATCH/PUT /challenges/1.json
   def update
     respond_to do |format|
       if @challenge.update(challenge_params)

@@ -12,4 +12,5 @@
 
 class Challenge < ApplicationRecord
   has_many :backers
+  has_many :payments
 end

@@ -10,7 +10,6 @@ $(document).on('turbolinks:load', function() {
       exp_month: $form.find('#exp_month').val(),
       exp_year: $form.find('#exp_year').val(),
     };
-    console.log('form details: ', formDetails)
 
     Stripe.card.createToken(formDetails, stripeResponseHandler);
     return false;
@@ -20,14 +19,13 @@ $(document).on('turbolinks:load', function() {
 
 function stripeResponseHandler(status, response) {
   var $form, token;
-  console.log('response: ', response);
   $form = $("#capture-payment");
   if (response.error) {
     show_error(response.error.message);
     $form.find("input[type=submit]").prop("disabled", false);
   } else {
     token = response.id;
-    $form.append($("<input type=\"hidden\" name=\"stripeToken]\" />").val(token));
+    $form.append($("<input type='hidden' name='stripeToken' />").val(token));
     $("#card_number").remove();
     $("#card_verification").remove();
     $("#exp_month").remove();
@@ -38,7 +36,7 @@ function stripeResponseHandler(status, response) {
 };
 
 function show_error(message) {
-  $("#flash-messages").html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a>' + message + '</div>');
+  $("#flash_messages").html('<div class="alert alert-danger"><a class="close" data-dismiss="alert">×</a>' + message + '</div>');
   // $('.alert').delay(5000).fadeOut(3000);
   return false;
 };
