@@ -11,7 +11,7 @@
 #
 
 class Backer < ApplicationRecord
-  belongs_to :challenge
+  belongs_to :challenge, optional: true
   has_many :payments
 
   validates :name, :email, :challenge_id, presence: true

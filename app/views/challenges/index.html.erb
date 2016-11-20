@@ -17,7 +17,7 @@
       <tr>
         <td><%= challenge.description %></td>
         <td><%= challenge.amount %></td>
-        <td><%= challenge.backers.count %></td>
+        <td><%= challenge.payments.paid.count %></td>
         <td><%= link_to 'Join', challenge_path(challenge) %></td>
       </tr>
     <% end %>

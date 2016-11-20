@@ -13,4 +13,6 @@
 class Challenge < ApplicationRecord
   has_many :backers
   has_many :payments
+
+  accepts_nested_attributes_for :backers
 end

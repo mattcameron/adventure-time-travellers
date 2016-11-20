@@ -11,6 +11,10 @@ $(document).on('turbolinks:load', function() {
       exp_year: $form.find('#exp_year').val(),
     };
 
+    if (!Stripe.card.validateCardNumber(formDetails.number)) {
+      show_error('Please enter a valid credit card number.');
+    }
+
     Stripe.card.createToken(formDetails, stripeResponseHandler);
     return false;
   });

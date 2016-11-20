@@ -1,12 +1,12 @@
 class ChallengesController < ApplicationController
   before_action :set_challenge, only: [:show, :edit, :update, :destroy, :join]
+  before_action :set_backer, only: [:show, :new]
 
   def index
     @challenges = Challenge.all
   end
 
   def show
-    @backer = Backer.find_or_initialize_by(id: session[:backer_id])
   end
 
   def new
@@ -78,14 +78,18 @@ class ChallengesController < ApplicationController
   def create
     @challenge = Challenge.new(challenge_params)
 
-    respond_to do |format|
-      if @challenge.save
-        format.html { redirect_to @challenge, notice: 'Challenge was successfully created.' }
-        format.json { render :show, status: :created, location: @challenge }
-      else
-        format.html { render :new }
-        format.json { render json: @challenge.errors, status: :unprocessable_entity }
-      end
+    if @challenge.valid?
+
+      byebug
+
+      capture_payment(
+        @challenge,
+        # @backer,  
+        params[:stripeToken],
+      )
+      redirect_to @challenge, notice: 'Challenge was successfully created.'
+    else
+      render :new
     end
   end
 
@@ -119,10 +123,23 @@ class ChallengesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def challenge_params
-      params.require(:challenge).permit(:description, :amount, :status)
+      params.require(:challenge).permit(
+        :description,
+        :amount,
+        :status,
+        backers_attributes: [
+          :id,
+          :name,
+          :email
+        ]
+      )
     end
 
     def backer_params
       params.require(:backer).permit(:name, :email, :challenge_id)
+    end
+
+    def set_backer
+    @backer = Backer.find_or_initialize_by(id: session[:backer_id])
     end
 end

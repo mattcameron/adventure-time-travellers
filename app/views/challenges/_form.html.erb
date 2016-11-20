@@ -21,9 +21,21 @@
     <%= f.text_field :amount %>
   </div>
 
+
+  <%= f.fields_for :backers, backer do |ff| %>
+    <div class="field">
+      <%= ff.label :name %>
+      <%= ff.text_field :name %>
+    </div>
+
+    <div class="field">
+      <%= ff.label :email %>
+      <%= ff.text_field :email %>
+    </div>  
+  <% end %>
+
   <div class="field">
-    <%= f.label :status %>
-    <%= f.number_field :status %>
+    <%= render 'shared/credit_card' %>
   </div>
 
   <div class="actions">
