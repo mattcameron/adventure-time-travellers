@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>RickshawRun</title>
+    <title>Rickshaw Run</title>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
-  <body>
+  <body class="<%= controller_name %>_controller <%= action_name %>_page">
+    <%= render 'shared/header' %>
     <%= render 'shared/flash_messages' %>
     <%= yield %>
   </body>

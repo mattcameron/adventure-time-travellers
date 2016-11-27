@@ -1,0 +1,19 @@
+.navbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: none;
+  border: 0;
+    ul.navbar-right {
+      li {
+        a {
+          color: white;
+        }
+      }
+      .dropdown-menu {
+        background: none;
+        box-shadow: none;
+        border: 0;
+      }
+    }
+}

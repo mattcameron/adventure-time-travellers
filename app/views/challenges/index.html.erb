@@ -1,29 +1,41 @@
-<p id="notice"><%= notice %></p>
+<section class="landing container-fluid">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-7">
+        <h1><span>4</span> men. <span>2</span> tuk tuks. <span>3000</span> kms.</h1>
+        <p class="lead">We're embarking on an epic journey across India for charity and we need your help. We're embarking on an epic journey across India for charity and we need your help. We're embarking on an epic journey across India for charity and we need your help.</p>
+        <a href="#" class="btn btn-primary btn-lg">Click Here</a>
+      </div>
+    </div>
+    
+  </div>
+  
+</section>
+<section id="competitors">
+<div class="container">
 
-<h1>Challenges</h1>
+  <h1 class="text-center">Challenges</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Description</th>
-      <th>Amount</th>
-      <th>Backers</th>
-      <th></th>
-    </tr>
-  </thead>
+    <tbody>
+      <% @challenges.each do |challenge| %>
+        <div class="row single-challenge">
+          <div class="col-sm-6">
+            <p class="lead"><%= challenge.description %></p>
+            <% challenge.backers.each do |backer| %>
+              <span class="label label-default"><%= backer.name %></span>
+            <% end %>
+          </div>
+          <div class="col-sm-3">
+            <h3><%= number_to_currency challenge.amount %></h3>
+          </div>
+          <div class="col-sm-3">
+            <p><%= challenge.payments.paid.count %></p>
+            <%= link_to 'Join', challenge_path(challenge), class: 'btn btn-primary' %>
+          </div>
+        </div>
+      <% end %>
 
-  <tbody>
-    <% @challenges.each do |challenge| %>
-      <tr>
-        <td><%= challenge.description %></td>
-        <td><%= challenge.amount %></td>
-        <td><%= challenge.payments.paid.count %></td>
-        <td><%= link_to 'Join', challenge_path(challenge) %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+  <%= link_to 'New Challenge', new_challenge_path %>
 
-<br>
-
-<%= link_to 'New Challenge', new_challenge_path %>
+  </div>
+</section>

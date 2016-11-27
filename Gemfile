@@ -14,6 +14,7 @@ gem 'annotate', '~> 2.7', '>= 2.7.1'
 gem 'rubocop', '~> 0.45.0', require: false
 gem 'devise', '~> 4.2'
 gem 'stripe', '~> 1.56'
+gem 'bootstrap-sass', '~> 3.3.6'
 
 # Use Redis adapter to run Action Cable in production
 # gem 'redis', '~> 3.0'
